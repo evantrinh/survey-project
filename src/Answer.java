@@ -38,7 +38,4 @@ public abstract class Answer implements Serializable {
     
     /* takes nothing, returns if answer is valid */
     public abstract boolean isValid();
-    
-    /* takes in other answer, returns if answers match */
-    public abstract boolean compare(Answer other);
 }

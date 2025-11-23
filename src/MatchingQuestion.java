@@ -120,7 +120,7 @@ public class MatchingQuestion extends Question {
     }
     
     @Override
-    public Answer takeAnswer() {
+    public void takeAnswer() {
         Scanner scanner = new Scanner(System.in);
         displayQuestion();
         
@@ -151,7 +151,6 @@ public class MatchingQuestion extends Question {
         }
         
         addAnswer(answer);
-        return answer;
     }
     
     @Override

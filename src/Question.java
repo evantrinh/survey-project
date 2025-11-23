@@ -57,8 +57,8 @@ public abstract class Question implements Serializable {
     /* modifies question */
     public abstract void modifyQuestion();
     
-    /* takes answer from user, returns answer */
-    public abstract Answer takeAnswer();
+    /* takes answer from user */
+    public abstract void takeAnswer();
     
     /* returns if accepts multiple answers */
     public abstract boolean acceptsMultipleAnswers();

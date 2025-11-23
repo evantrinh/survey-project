@@ -46,7 +46,7 @@ public class ShortAnswerQuestion extends EssayQuestion {
     }
     
     @Override
-    public Answer takeAnswer() {
+    public void takeAnswer() {
         Scanner scanner = new Scanner(System.in);
         displayQuestion();
         
@@ -70,7 +70,6 @@ public class ShortAnswerQuestion extends EssayQuestion {
                 answer.addAnswerValue(answerText);
             }
             addAnswer(answer);
-            return answer;
         } else {
             String answerText = "";
             while (answerText.isEmpty() || answerText.length() > maxLength) {
@@ -87,7 +86,6 @@ public class ShortAnswerQuestion extends EssayQuestion {
             SingleAnswer answer = new SingleAnswer(this);
             answer.setAnswerValue(answerText);
             addAnswer(answer);
-            return answer;
         }
     }
     

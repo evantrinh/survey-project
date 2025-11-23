@@ -4,6 +4,7 @@ import java.util.List;
 
 public class SurveyResponse implements Serializable {
     private static final long serialVersionUID = 1L;
+    private static final String DATA_DIRECTORY = "survey_data";
     
     private List<Answer> answers;
     
@@ -42,7 +43,35 @@ public class SurveyResponse implements Serializable {
         }
     }
     
-
+    /* takes in filename, saves response */
+    public void save(String filename) {
+        File dataDir = new File(DATA_DIRECTORY);
+        if (!dataDir.exists()) {
+            dataDir.mkdir();
+        }
+        
+        String filepath = DATA_DIRECTORY + File.separator + filename;
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filepath))) {
+            oos.writeObject(this);
+            System.out.println("Response saved successfully to " + filepath);
+        } catch (IOException e) {
+            System.err.println("Error saving response: " + e.getMessage());
+        }
+    }
+    
+    /* takes in filename, loads and returns response */
+    public static SurveyResponse load(String filename) {
+        String filepath = DATA_DIRECTORY + File.separator + filename;
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filepath))) {
+            SurveyResponse response = (SurveyResponse) ois.readObject();
+            System.out.println("Response loaded successfully from " + filepath);
+            return response;
+        } catch (IOException | ClassNotFoundException e) {
+            System.err.println("Error loading response: " + e.getMessage());
+            return null;
+        }
+    }
+    
     /* returns if response is complete */
     public boolean isComplete() {
         if (answers.isEmpty()) {

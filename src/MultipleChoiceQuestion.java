@@ -93,7 +93,7 @@ public class MultipleChoiceQuestion extends Question {
     }
     
     @Override
-    public Answer takeAnswer() {
+    public void takeAnswer() {
         Scanner scanner = new Scanner(System.in);
         displayQuestion();
         
@@ -119,7 +119,6 @@ public class MultipleChoiceQuestion extends Question {
             SingleAnswer answer = new SingleAnswer(this);
             answer.setAnswerValue(choice);
             addAnswer(answer);
-            return answer;
         } else { // maxSelections > 1
             MultipleAnswer answer = new MultipleAnswer(this);
             
@@ -145,7 +144,6 @@ public class MultipleChoiceQuestion extends Question {
                 answer.addAnswerValue(choice);
             }
             addAnswer(answer);
-            return answer;
         }
     }
     

@@ -1,6 +1,3 @@
-import java.util.List;
-import java.util.Map;
-
 public class OutputHandler {
     
     /* default constructor */
@@ -57,58 +54,5 @@ public class OutputHandler {
         }
         
         response.displayResponse();
-    }
-    
-    /* takes in grade report, displays grade report */
-    public void displayGradeReport(GradeReport report) {
-        if (report == null) {
-            displayError("No grade report to display.");
-            return;
-        }
-        
-        System.out.println("\n=== Grade Report ===");
-        System.out.printf("You received a %.0f on the test. ", report.getScore());
-        System.out.printf("The test was worth %.0f points, ", report.getTotalPoints());
-        System.out.printf("but only %.0f of those points could be auto-graded", report.getGradablePoints());
-        
-        if (report.getNumEssayQuestions() > 0) {
-            System.out.printf(" because there %s %d essay question%s.",
-                report.getNumEssayQuestions() == 1 ? "was" : "were",
-                report.getNumEssayQuestions(),
-                report.getNumEssayQuestions() == 1 ? "" : "s");
-        } else {
-            System.out.println(".");
-        }
-        
-        System.out.println();
-    }
-    
-    /* takes in tabulation results, displays tabulation */
-    public void displayTabulation(Map<String, Object> results) {
-        if (results == null || results.isEmpty()) {
-            displayError("No tabulation results to display.");
-            return;
-        }
-        
-        System.out.println("\n=== Tabulation Results ===");
-        
-        for (Map.Entry<String, Object> entry : results.entrySet()) {
-            System.out.println("\n" + entry.getKey());
-            Object value = entry.getValue();
-            
-            if (value instanceof Map) {
-                Map<?, ?> map = (Map<?, ?>) value;
-                for (Map.Entry<?, ?> item : map.entrySet()) {
-                    System.out.println("  " + item.getKey() + ": " + item.getValue());
-                }
-            } else if (value instanceof List) {
-                List<?> list = (List<?>) value;
-                for (int i = 0; i < list.size(); i++) {
-                    System.out.println("  " + (i + 1) + ". " + list.get(i));
-                }
-            }
-        }
-        
-        System.out.println();
     }
 }

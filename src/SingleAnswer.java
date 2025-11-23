@@ -46,23 +46,4 @@ public class SingleAnswer extends Answer {
     public boolean isValid() {
         return answerValue != null && !answerValue.toString().trim().isEmpty();
     }
-    
-    @Override
-    public boolean compare(Answer other) {
-        if (other == null || !(other instanceof SingleAnswer)) {
-            return false;
-        }
-        
-        Object otherValue = other.getAnswerValue();
-        
-        if (answerValue == null && otherValue == null) {
-            return true;
-        }
-        
-        if (answerValue == null || otherValue == null) {
-            return false;
-        }
-        
-        return answerValue.toString().trim().equalsIgnoreCase(otherValue.toString().trim());
-    }
 }

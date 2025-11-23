@@ -76,7 +76,7 @@ public class EssayQuestion extends Question {
     }
     
     @Override
-    public Answer takeAnswer() {
+    public void takeAnswer() {
         Scanner scanner = new Scanner(System.in);
         displayQuestion();
         
@@ -108,7 +108,6 @@ public class EssayQuestion extends Question {
                 answer.addAnswerValue(answerText);
             }
             addAnswer(answer);
-            return answer;
         } else {
             String answerText = "";
             int wordCount = 0;
@@ -134,7 +133,6 @@ public class EssayQuestion extends Question {
             SingleAnswer answer = new SingleAnswer(this);
             answer.setAnswerValue(answerText);
             addAnswer(answer);
-            return answer;
         }
     }
     

@@ -39,7 +39,7 @@ public class TrueFalseQuestion extends MultipleChoiceQuestion {
     }
     
     @Override
-    public Answer takeAnswer() {
+    public void takeAnswer() {
         Scanner scanner = new Scanner(System.in);
         displayQuestion();
         
@@ -59,7 +59,6 @@ public class TrueFalseQuestion extends MultipleChoiceQuestion {
         SingleAnswer answer = new SingleAnswer(this);
         answer.setAnswerValue(choice.toUpperCase().startsWith("T") ? "True" : "False");
         addAnswer(answer);
-        return answer;
     }
     
     @Override

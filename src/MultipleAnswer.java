@@ -82,28 +82,4 @@ public class MultipleAnswer extends Answer {
     public boolean isValid() {
         return answerValues != null && !answerValues.isEmpty();
     }
-    
-    @Override
-    public boolean compare(Answer other) {
-        if (other == null || !(other instanceof MultipleAnswer)) {
-            return false;
-        }
-        
-        MultipleAnswer otherMA = (MultipleAnswer) other;
-        Object[] otherValues = otherMA.getAnswerValues();
-        
-        if (answerValues.size() != otherValues.length) {
-            return false;
-        }
-        
-        for (int i = 0; i < answerValues.size(); i++) {
-            String thisValue = answerValues.get(i).toString().trim();
-            String otherValue = otherValues[i].toString().trim();
-            if (!thisValue.equalsIgnoreCase(otherValue)) {
-                return false;
-            }
-        }
-        
-        return true;
-    }
 }

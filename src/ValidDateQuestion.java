@@ -140,7 +140,7 @@ public class ValidDateQuestion extends Question {
     }
     
     @Override
-    public Answer takeAnswer() {
+    public void takeAnswer() {
         Scanner scanner = new Scanner(System.in);
         SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
         sdf.setLenient(false);
@@ -186,7 +186,6 @@ public class ValidDateQuestion extends Question {
             }
             
             addAnswer(answer);
-            return answer;
         } else {
             Date dateAnswer = null;
             boolean valid = false;
@@ -222,7 +221,6 @@ public class ValidDateQuestion extends Question {
             SingleAnswer answer = new SingleAnswer(this);
             answer.setAnswerValue(sdf.format(dateAnswer));
             addAnswer(answer);
-            return answer;
         }
     }
     
