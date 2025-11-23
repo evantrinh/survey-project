@@ -347,7 +347,7 @@ public class SurveyMenuInterface {
             return;
         }
         
-        manager.displaySurvey(currentSurvey);
+        outputHandler.displaySurvey(currentSurvey);
         
         System.out.println("\nWhat question do you wish to modify?");
         int questionNum = getIntInput("Enter question number: ");
@@ -615,7 +615,7 @@ public class SurveyMenuInterface {
         }
         
         Map<String, Object> tabulation = tabulationService.tabulateSurvey(currentSurvey);
-        outputHandler.displayTabulation(tabulation, currentSurvey);
+        outputHandler.displayTabulation(tabulation);
     }
     
     /* handles creating test */
@@ -790,7 +790,7 @@ public class SurveyMenuInterface {
         }
         
         Map<String, Object> tabulation = tabulationService.tabulateSurvey(currentSurvey);
-        outputHandler.displayTabulation(tabulation, currentSurvey);
+        outputHandler.displayTabulation(tabulation);
     }
     
     /* handles grading test */
