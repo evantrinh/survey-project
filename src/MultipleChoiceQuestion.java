@@ -1,8 +1,10 @@
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class MultipleChoiceQuestion extends Question {
+    @Serial
     private static final long serialVersionUID = 1L;
     
     private List<String> choices;
@@ -66,7 +68,7 @@ public class MultipleChoiceQuestion extends Question {
             }
             choicesLine.append((char)('A' + i)).append(") ").append(choices.get(i));
         }
-        System.out.println(choicesLine.toString());
+        System.out.println(choicesLine);
     }
     
     @Override
@@ -106,7 +108,7 @@ public class MultipleChoiceQuestion extends Question {
                 System.out.print("Enter your choice (A-" + (char)('A' + choices.size() - 1) + "): ");
                 choice = scanner.nextLine().trim().toUpperCase();
                 
-                if (choice.length() > 0) {
+                if (!choice.isEmpty()) {
                     index = choice.charAt(0) - 'A';
                     if (index < 0 || index >= choices.size()) {
                         System.out.println("Invalid choice.");
@@ -127,12 +129,12 @@ public class MultipleChoiceQuestion extends Question {
                 String choice = "";
                 int index = -1;
 
-                // prompt user for choicse (validates 'A' through whatever # of choice)
+                // prompt user for choice (validates 'A' through whatever # of choice)
                 while (index < 0 || index >= choices.size()) {
                     System.out.print("Enter selection " + (i + 1) + " (A-" + (char)('A' + choices.size() - 1) + "): ");
                     choice = scanner.nextLine().trim().toUpperCase();
                     
-                    if (choice.length() > 0) {
+                    if (!choice.isEmpty()) {
                         index = choice.charAt(0) - 'A';
                         if (index < 0 || index >= choices.size()) {
                             System.out.println("Invalid choice.");

@@ -1,6 +1,4 @@
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
 
 public class FileService {
     private static final String DATA_DIRECTORY = "survey_data";

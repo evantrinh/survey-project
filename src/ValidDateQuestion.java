@@ -1,3 +1,4 @@
+import java.io.Serial;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -5,6 +6,7 @@ import java.util.Scanner;
 import java.util.regex.Pattern;
 
 public class ValidDateQuestion extends Question {
+    @Serial
     private static final long serialVersionUID = 1L;
     
     private String dateFormat;
