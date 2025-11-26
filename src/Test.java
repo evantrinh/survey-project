@@ -58,13 +58,30 @@ public class Test extends Survey {
 			questions[i].displayQuestion();
 
 			if (i < correctAnswers.size() && correctAnswers.get(i) != null) {
-				System.out.print("The correct answer is: ");
-
 				Object value = correctAnswers.get(i).getAnswerValue();
+				Question question = questions[i];
+
 				if (value != null) {
-					System.out.println(value);
+					if (question instanceof TrueFalseQuestion) {
+						System.out.println("The correct answer is " + value);
+					} else if (question instanceof MultipleChoiceQuestion) {
+						String letter = value.toString().trim().toUpperCase();
+						if (!letter.isEmpty()) {
+							int index = letter.charAt(0) - 'A';
+							String[] choices = ((MultipleChoiceQuestion) question).getChoices();
+							if (index >= 0 && index < choices.length) {
+								System.out.println("The correct choice is " + letter + ") " + choices[index]);
+							} else {
+								System.out.println("The correct answer is " + value);
+							}
+						} else {
+							System.out.println("The correct answer is " + value);
+						}
+					} else {
+						System.out.println("The correct answer is " + value);
+					}
 				} else {
-					System.out.println("Not set");
+					System.out.println("The correct answer is Not set");
 				}
 			}
 

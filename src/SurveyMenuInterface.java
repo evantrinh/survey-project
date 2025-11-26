@@ -1,24 +1,19 @@
-import java.util.Map;
-import java.util.Scanner;
-
 public class SurveyMenuInterface {
 	private SurveyManager manager;
-	private Scanner scanner;
 	private InputHandler inputHandler;
 	private OutputHandler outputHandler;
-	private FileService fileService;
-	private GradingService gradingService;
 	private TabulationService tabulationService;
+	private GradingService gradingService;
+	private FileService fileService;
 
-	/* takes in manager, constructs menu interface */
-	public SurveyMenuInterface(SurveyManager manager) {
-		this.manager = manager;
-		this.scanner = new Scanner(System.in);
+	/* default constructor */
+	public SurveyMenuInterface() {
+		this.manager = new SurveyManager();
 		this.inputHandler = new InputHandler();
 		this.outputHandler = new OutputHandler();
-		this.fileService = new FileService();
-		this.gradingService = new GradingService();
 		this.tabulationService = new TabulationService();
+		this.gradingService = new GradingService();
+		this.fileService = new FileService();
 	}
 
 	/* displays main menu */
@@ -57,12 +52,12 @@ public class SurveyMenuInterface {
 		while (running) {
 			System.out.println("\n=== SURVEY MENU ===");
 			System.out.println("1) Create a new Survey");
-			System.out.println("2) Display a Survey");
-			System.out.println("3) Load a Survey");
-			System.out.println("4) Save a Survey");
-			System.out.println("5) Take a Survey");
-			System.out.println("6) Modify a Survey");
-			System.out.println("7) Tabulate a Survey");
+			System.out.println("2) Display an existing Survey");
+			System.out.println("3) Load an existing Survey");
+			System.out.println("4) Save the current Survey");
+			System.out.println("5) Take the current Survey");
+			System.out.println("6) Modify the current Survey");
+			System.out.println("7) Tabulate a survey");
 			System.out.println("8) Return to previous menu");
 
 			int choice = getIntInput("Enter your choice (1-8): ");
@@ -105,15 +100,15 @@ public class SurveyMenuInterface {
 		while (running) {
 			System.out.println("\n=== TEST MENU ===");
 			System.out.println("1) Create a new Test");
-			System.out.println("2) Display a Test");
-			System.out.println("3) Load a Test");
-			System.out.println("4) Save a Test");
-			System.out.println("5) Take a Test");
-			System.out.println("6) Modify a Test");
-			System.out.println("7) Tabulate a Test");
-			System.out.println("8) Grade a Test");
-			System.out.println("9) Display Test with correct answers");
-			System.out.println("10) Return to previous menu");
+			System.out.println("2) Display an existing Test without correct answers");
+			System.out.println("3) Display an existing Test with correct answers");
+			System.out.println("4) Load an existing Test");
+			System.out.println("5) Save the current Test");
+			System.out.println("6) Take the current Test");
+			System.out.println("7) Modify the current Test");
+			System.out.println("8) Tabulate a Test");
+			System.out.println("9) Grade a Test");
+			System.out.println("10) Return to the previous menu");
 
 			int choice = getIntInput("Enter your choice (1-10): ");
 
@@ -125,25 +120,25 @@ public class SurveyMenuInterface {
 				handleDisplayTest();
 				break;
 			case 3:
-				handleLoadTest();
+				handleDisplayTestWithAnswers();
 				break;
 			case 4:
-				handleSaveTest();
+				handleLoadTest();
 				break;
 			case 5:
-				handleTakeTest();
+				handleSaveTest();
 				break;
 			case 6:
-				handleModifyTest();
+				handleTakeTest();
 				break;
 			case 7:
-				handleTabulateTest();
+				handleModifyTest();
 				break;
 			case 8:
-				handleGradeTest();
+				handleTabulateTest();
 				break;
 			case 9:
-				handleDisplayTestWithAnswers();
+				handleGradeTest();
 				break;
 			case 10:
 				running = false;
@@ -157,10 +152,9 @@ public class SurveyMenuInterface {
 	/* handles creating new survey */
 	public void handleCreateSurvey() {
 		System.out.println("\n=== Create New Survey ===");
-
 		Survey survey = manager.createSurvey("");
 
-		// add questions using Menu 2
+		// add questions using Menu 3
 		boolean addingQuestions = true;
 		while (addingQuestions) {
 			addingQuestions = displayAddQuestionMenu(survey);
@@ -208,6 +202,54 @@ public class SurveyMenuInterface {
 		}
 	}
 
+	/* takes in test, displays add question menu, adds correct answer after each question */
+	private boolean displayAddTestQuestionMenu(Test test) {
+		System.out.println("1) Add a new T/F question");
+		System.out.println("2) Add a new multiple-choice question");
+		System.out.println("3) Add a new short answer question");
+		System.out.println("4) Add a new essay question");
+		System.out.println("5) Add a new date question");
+		System.out.println("6) Add a new matching question");
+		System.out.println("7) Return to previous menu");
+
+		int choice = getIntInput("Enter your choice (1-7): ");
+
+		int questionIndex = test.getNumQuestions();
+
+		switch (choice) {
+		case 1:
+			addTrueFalseQuestion(test);
+			addCorrectAnswer(test, questionIndex);
+			return true;
+		case 2:
+			addMultipleChoiceQuestion(test);
+			addCorrectAnswer(test, questionIndex);
+			return true;
+		case 3:
+			addShortAnswerQuestion(test);
+			addCorrectAnswer(test, questionIndex);
+			return true;
+		case 4:
+			addEssayQuestion(test);
+			// essays cannot be graded, add null correct answer
+			test.addCorrectAnswer(null);
+			return true;
+		case 5:
+			addDateQuestion(test);
+			addCorrectAnswer(test, questionIndex);
+			return true;
+		case 6:
+			addMatchingQuestion(test);
+			addCorrectAnswer(test, questionIndex);
+			return true;
+		case 7:
+			return false;
+		default:
+			System.out.println("Invalid choice. Please enter a number between 1 and 7.");
+			return true;
+		}
+	}
+
 	/* takes in survey, adds true/false question */
 	private void addTrueFalseQuestion(Survey survey) {
 		System.out.println("\nEnter the prompt for your True/False question:");
@@ -235,9 +277,8 @@ public class SurveyMenuInterface {
 		}
 
 		// get if multiple responses, no. of responses
-		System.out.println("Does this question allow multiple responses? (y/n)");
-		String multipleResponse = getStringInput("");
-		if (multipleResponse.equalsIgnoreCase("y")) {
+		boolean allowMultiple = getYesNoInput("Does this question allow multiple responses?");
+		if (allowMultiple) {
 			int maxSelections = getIntInput("Enter the maximum number of selections allowed: ");
 			question.setMaxSelections(maxSelections);
 		} else {
@@ -255,9 +296,8 @@ public class SurveyMenuInterface {
 
 		ShortAnswerQuestion question = new ShortAnswerQuestion(prompt);
 
-		System.out.println("Does this question allow multiple short answers? (y/n)");
-		String multipleResponse = getStringInput("");
-		if (multipleResponse.equalsIgnoreCase("y")) {
+		boolean allowMultiple = getYesNoInput("Does this question allow multiple short answers?");
+		if (allowMultiple) {
 			int numResponses = getIntInput("How many short answers are required? ");
 			question.setNumResponsesRequired(numResponses);
 		}
@@ -276,9 +316,8 @@ public class SurveyMenuInterface {
 
 		EssayQuestion question = new EssayQuestion(prompt);
 
-		System.out.println("Does this question allow multiple essay responses? (y/n)");
-		String multipleResponse = getStringInput("");
-		if (multipleResponse.equalsIgnoreCase("y")) {
+		boolean allowMultiple = getYesNoInput("Does this question allow multiple essay responses?");
+		if (allowMultiple) {
 			int numResponses = getIntInput("How many essay responses are required? ");
 			question.setNumResponsesRequired(numResponses);
 		}
@@ -299,9 +338,8 @@ public class SurveyMenuInterface {
 
 		ValidDateQuestion question = new ValidDateQuestion(prompt);
 
-		System.out.println("Does this question allow multiple dates? (y/n)");
-		String multipleResponse = getStringInput("");
-		if (multipleResponse.equalsIgnoreCase("y")) {
+		boolean allowMultiple = getYesNoInput("Does this question allow multiple dates?");
+		if (allowMultiple) {
 			int numResponses = getIntInput("How many dates are required? ");
 			question.setNumResponsesRequired(numResponses);
 		}
@@ -427,6 +465,7 @@ public class SurveyMenuInterface {
 
 		SurveyResponse response = currentSurvey.takeSurvey();
 
+		// save response to separate file per assignment requirements
 		String responseFilename = "response_" + System.currentTimeMillis() + ".ser";
 		fileService.saveResponse(response, responseFilename);
 	}
@@ -614,38 +653,18 @@ public class SurveyMenuInterface {
 			return;
 		}
 
-		Map<String, Object> tabulation = tabulationService.tabulateSurvey(currentSurvey);
-		outputHandler.displayTabulation(tabulation);
+		tabulationService.tabulateSurvey(currentSurvey);
 	}
 
 	/* handles creating test */
 	public void handleCreateTest() {
 		System.out.println("\n=== Create New Test ===");
+		Test test = new Test("");
 
-		String name = getStringInput("Enter test name: ");
-		Test test = new Test(name);
-
-		/* add questions using menu 2 */
+		/* add questions using menu 3 - correct answers prompted after each question */
 		boolean addingQuestions = true;
 		while (addingQuestions) {
-			addingQuestions = displayAddQuestionMenu(test);
-		}
-
-		/* add correct answers */
-		System.out.println("\n=== Add Correct Answers ===");
-		for (int i = 0; i < test.getNumQuestions(); i++) {
-			Question question = test.getQuestion(i);
-
-			/* skip essay questions - they cannot be graded */
-			if (question instanceof EssayQuestion) {
-				System.out.println("Skipping essay question (cannot be auto-graded).");
-				test.addCorrectAnswer(null);
-				continue;
-			}
-
-			System.out.println("\nQuestion " + (i + 1) + ": " + question.getPrompt());
-			Answer correctAnswer = question.takeAnswer();
-			test.addCorrectAnswer(correctAnswer);
+			addingQuestions = displayAddTestQuestionMenu(test);
 		}
 
 		manager.setCurrentSurvey(test);
@@ -734,7 +753,8 @@ public class SurveyMenuInterface {
 
 		SurveyResponse response = currentSurvey.takeSurvey();
 
-		String responseFilename = "test_response_" + System.currentTimeMillis() + ".ser";
+		// save response to separate file per assignment requirements
+		String responseFilename = "response_" + System.currentTimeMillis() + ".ser";
 		fileService.saveResponse(response, responseFilename);
 	}
 
@@ -743,7 +763,7 @@ public class SurveyMenuInterface {
 		System.out.println("\n=== Modify Test ===");
 		Survey currentSurvey = manager.getCurrentSurvey();
 
-		if (!(currentSurvey instanceof Test)) {
+		if (!(currentSurvey instanceof Test test)) {
 			System.out.println("You must have a test loaded in order to modify it.");
 			return;
 		}
@@ -761,17 +781,8 @@ public class SurveyMenuInterface {
 
 		modifyQuestionInteractive(question);
 
-		/* update correct answer if not essay */
-		if (!(question instanceof EssayQuestion)) {
-			System.out.println("\nDo you want to update the correct answer? (y/n)");
-			String updateAnswer = getStringInput("");
-			if (updateAnswer.equalsIgnoreCase("y")) {
-				System.out.println("Enter the correct answer:");
-				Answer correctAnswer = question.takeAnswer();
-				((Test) currentSurvey).setCorrectAnswer(questionNum - 1, correctAnswer);
-				System.out.println("Correct answer updated.");
-			}
-		}
+		/* update correct answer using helper method */
+		modifyCorrectAnswer(test, questionNum - 1);
 	}
 
 	/* handles tabulating test */
@@ -789,17 +800,39 @@ public class SurveyMenuInterface {
 			return;
 		}
 
-		Map<String, Object> tabulation = tabulationService.tabulateSurvey(currentSurvey);
-		outputHandler.displayTabulation(tabulation);
+		tabulationService.tabulateSurvey(currentSurvey);
 	}
 
 	/* handles grading test */
 	public void handleGradeTest() {
 		System.out.println("\n=== Grade Test ===");
-		Survey currentSurvey = manager.getCurrentSurvey();
 
-		if (!(currentSurvey instanceof Test test)) {
-			System.out.println("You must have a test loaded in order to grade it.");
+		// list only test files for selection
+		String[] files = fileService.listTestFiles();
+
+		if (files == null || files.length == 0) {
+			System.out.println("No test files found.");
+			return;
+		}
+
+		System.out.println("Select an existing test to grade:");
+		for (int i = 0; i < files.length; i++) {
+			System.out.println((i + 1) + ") " + files[i].replace(".ser", ""));
+		}
+
+		int testChoice = getIntInput("Enter your choice: ");
+
+		if (testChoice < 1 || testChoice > files.length) {
+			System.out.println("Invalid choice.");
+			return;
+		}
+
+		String filename = files[testChoice - 1];
+		String testName = filename.replace(".ser", "");
+		Survey loadedSurvey = fileService.loadSurvey(filename);
+
+		if (!(loadedSurvey instanceof Test test)) {
+			System.out.println("Selected file is not a test.");
 			return;
 		}
 
@@ -808,21 +841,21 @@ public class SurveyMenuInterface {
 			return;
 		}
 
-		/* list all responses */
+		// list all responses for selection using filename
 		SurveyResponse[] responses = test.getResponses();
-		System.out.println("\nAvailable responses:");
+		System.out.println("\nSelect an existing response set:");
 		for (int i = 0; i < responses.length; i++) {
-			System.out.println((i + 1) + ") Response " + (i + 1));
+			System.out.println((i + 1) + ") " + testName + " - Response " + (i + 1));
 		}
 
-		int choice = getIntInput("Select response to grade: ");
+		int responseChoice = getIntInput("Enter your choice: ");
 
-		if (choice < 1 || choice > responses.length) {
+		if (responseChoice < 1 || responseChoice > responses.length) {
 			System.out.println("Invalid choice.");
 			return;
 		}
 
-		SurveyResponse response = responses[choice - 1];
+		SurveyResponse response = responses[responseChoice - 1];
 		GradeReport report = gradingService.gradeTest(test, response);
 		outputHandler.displayGradeReport(report);
 	}
@@ -840,6 +873,33 @@ public class SurveyMenuInterface {
 		test.displayTestWithAnswers();
 	}
 
+	/* takes in test and question index, adds correct answer */
+	private void addCorrectAnswer(Test test, int questionIndex) {
+		Question question = test.getQuestion(questionIndex);
+
+		System.out.println("Enter the correct answer:");
+		Answer correctAnswer = question.takeAnswer();
+		test.addCorrectAnswer(correctAnswer);
+	}
+
+	/* takes in test and question index, modifies correct answer */
+	private void modifyCorrectAnswer(Test test, int questionIndex) {
+		Question question = test.getQuestion(questionIndex);
+
+		/* skip pure essay questions - they cannot be auto-graded */
+		if (question instanceof EssayQuestion && !(question instanceof ShortAnswerQuestion)) {
+			return;
+		}
+
+		boolean update = getYesNoInput("Do you want to update the correct answer?");
+		if (update) {
+			System.out.println("Enter the correct answer:");
+			Answer correctAnswer = question.takeAnswer();
+			test.setCorrectAnswer(questionIndex, correctAnswer);
+			System.out.println("Correct answer updated.");
+		}
+	}
+
 	/* takes in prompt, returns integer input */
 	private int getIntInput(String prompt) {
 		return inputHandler.getIntInput(prompt);
@@ -848,5 +908,20 @@ public class SurveyMenuInterface {
 	/* takes in prompt, returns string input */
 	private String getStringInput(String prompt) {
 		return inputHandler.getStringInput(prompt);
+	}
+
+	/* takes in prompt, returns validated yes/no boolean */
+	private boolean getYesNoInput(String prompt) {
+		String input = "";
+		while (!input.equalsIgnoreCase("y") && !input.equalsIgnoreCase("n") &&
+			   !input.equalsIgnoreCase("yes") && !input.equalsIgnoreCase("no")) {
+			System.out.print(prompt + " (y/n): ");
+			input = getStringInput("").trim();
+			if (!input.equalsIgnoreCase("y") && !input.equalsIgnoreCase("n") &&
+				!input.equalsIgnoreCase("yes") && !input.equalsIgnoreCase("no")) {
+				System.out.println("Invalid input. Please enter y or n.");
+			}
+		}
+		return input.equalsIgnoreCase("y") || input.equalsIgnoreCase("yes");
 	}
 }

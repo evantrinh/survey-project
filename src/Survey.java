@@ -107,6 +107,11 @@ public class Survey implements Serializable {
 		this.responses.add(response);
 	}
 
+	/* clears all responses */
+	public void clearResponses() {
+		this.responses.clear();
+	}
+
 	/* returns all responses */
 	public SurveyResponse[] getResponses() {
 		return responses.toArray(new SurveyResponse[0]);

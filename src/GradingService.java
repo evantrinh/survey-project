@@ -48,7 +48,8 @@ public class GradingService {
         Question[] questions = test.getAllQuestions();
         
         for (Question question : questions) {
-            if (!(question instanceof EssayQuestion)) {
+            // short answer can be graded, only skip pure essay questions
+            if (question instanceof ShortAnswerQuestion || !(question instanceof EssayQuestion)) {
                 count++;
             }
         }

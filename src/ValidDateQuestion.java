@@ -17,14 +17,14 @@ public class ValidDateQuestion extends Question {
     /* default constructor */
     public ValidDateQuestion() {
         super();
-        this.dateFormat = "YYYY-MM-DD";
+        this.dateFormat = "yyyy-MM-dd";
         this.numResponsesRequired = 1;
     }
     
     /* takes in prompt, constructs date question */
     public ValidDateQuestion(String prompt) {
         super(prompt);
-        this.dateFormat = "YYYY-MM-DD";
+        this.dateFormat = "yyyy-MM-dd";
         this.numResponsesRequired = 1;
     }
     

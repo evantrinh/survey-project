@@ -59,26 +59,36 @@ public class FileService {
         }
     }
     
-    /* returns list of survey files */
+    /* returns list of survey files only (excludes tests) */
     public String[] listSurveyFiles() {
         File dataDir = new File(DATA_DIRECTORY);
         if (!dataDir.exists()) {
             return new String[0];
         }
         
+        // get all survey/test files
         File[] files = dataDir.listFiles((dir, name) -> 
-            name.toLowerCase().endsWith(".dat") || name.toLowerCase().endsWith(".ser"));
+            (name.toLowerCase().endsWith(".dat") || name.toLowerCase().endsWith(".ser"))
+            && !name.toLowerCase().contains("response"));
         
         if (files == null) {
             return new String[0];
         }
         
-        String[] fileNames = new String[files.length];
-        for (int i = 0; i < files.length; i++) {
-            fileNames[i] = files[i].getName();
+        // filter to only include Survey instances (not Test)
+        java.util.List<String> surveyFiles = new java.util.ArrayList<>();
+        for (File file : files) {
+            try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
+                Object obj = ois.readObject();
+                if (obj instanceof Survey && !(obj instanceof Test)) {
+                    surveyFiles.add(file.getName());
+                }
+            } catch (IOException | ClassNotFoundException e) {
+                // skip files that can't be read
+            }
         }
         
-        return fileNames;
+        return surveyFiles.toArray(new String[0]);
     }
     
     /* returns list of response files */
@@ -101,5 +111,37 @@ public class FileService {
         }
         
         return fileNames;
+    }
+
+    /* returns list of test files only */
+    public String[] listTestFiles() {
+        File dataDir = new File(DATA_DIRECTORY);
+        if (!dataDir.exists()) {
+            return new String[0];
+        }
+        
+        // get all survey/test files
+        File[] files = dataDir.listFiles((dir, name) -> 
+            (name.toLowerCase().endsWith(".dat") || name.toLowerCase().endsWith(".ser"))
+            && !name.toLowerCase().contains("response"));
+        
+        if (files == null) {
+            return new String[0];
+        }
+        
+        // filter to only include Test instances
+        java.util.List<String> testFiles = new java.util.ArrayList<>();
+        for (File file : files) {
+            try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
+                Object obj = ois.readObject();
+                if (obj instanceof Test) {
+                    testFiles.add(file.getName());
+                }
+            } catch (IOException | ClassNotFoundException e) {
+                // skip files that can't be read
+            }
+        }
+        
+        return testFiles.toArray(new String[0]);
     }
 }
